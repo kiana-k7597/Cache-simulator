@@ -28,7 +28,7 @@ int main() {
     int NumberofCacheLines;
     //The name of the trace file being analysed (without the folder path)
     char trace_file_name;
-    //The ID number of the cache configuration mode (1 … 8)
+    //The ID number of the cache configuration mode (1 â€¦ 8)
     int mode_ID = 1;
     //Total number of read accesses to the external memory
     int NRA = 0;
@@ -120,48 +120,48 @@ int main() {
                         //terminate loop and move on to the next loop
                         break;
                         }
-                            //if tag does not exist in the cache
-                            else if(j==NumberofCacheLines-1) {
-                                //increment number of read misses
-                                NCRM++;
-                                //place tag into cache
-                                cache[tracker]=tag;
-                                //if valid bit is not set
-                                if(ValidBit[j] == 0) {
-                                    //increase number of read accesses by the cache block size
-                                    NRA = NRA+CacheBlockSize;
-                                    //set the valid bit to 1
-                                    ValidBit[j] = 1;
-                                    }
+                     //if tag does not exist in the cache
+                     else if(j==NumberofCacheLines-1) {
+                            //increment number of read misses
+                            NCRM++;
+                            //place tag into cache
+                            cache[tracker]=tag;
+                            //if valid bit is not set
+                                    if(ValidBit[j] == 0) {
+                                        //increase number of read accesses by the cache block size
+                                        NRA = NRA+CacheBlockSize;
+                                        //set the valid bit to 1
+                                        ValidBit[j] = 1;
+                                        }
                                         //if the valid bit is set
-                                        else if(ValidBit[j] == 1){
-                                        //and if the dirty bit is not set
-                                        if(DirtyBit[j] == 0){
-                                            //increase number of read accesses by the cache block size
-                                            NRA = NRA+CacheBlockSize;
-                                            }
-                                                //if the dirty bit is set to 0
-                                                else if(DirtyBit[j] == 0){
-                                                //increase number of write accesses by cache block size
-                                                NWA = NWA + CacheBlockSize;
-                                                //increase number of read accesses by cache block size
-                                                NRA = NRA + CacheBlockSize;
-                                                //set the dirty bit to 0
-                                                DirtyBit[j] = 0;
+                                     else if(ValidBit[j] == 1){
+                                            //and if the dirty bit is not set
+                                            if(DirtyBit[j] == 0){
+                                                //increase number of read accesses by the cache block size
+                                                NRA = NRA+CacheBlockSize;
                                                 }
-                                            }
+                                                //if the dirty bit is set to 0
+                                             else if(DirtyBit[j] == 0){
+                                                    //increase number of write accesses by cache block size
+                                                    NWA = NWA + CacheBlockSize;
+                                                    //increase number of read accesses by cache block size
+                                                    NRA = NRA + CacheBlockSize;
+                                                    //set the dirty bit to 0
+                                                    DirtyBit[j] = 0;
+                                                    }
+                                                }
                                 //if the tracker is less than the number of cache lines
                                 if(tracker<NumberofCacheLines-1){
                                 //increment tracker to move to the next row in the array
                                     tracker++;
                                     }
-                                    else {
-                                        //if it reaches the top of the array then reset to 0
-                                        tracker=0;
-                                        }
-                                    }
-                                }
-                            }
+                                else {
+                                   //if it reaches the top of the array then reset to 0
+                                   tracker=0;
+                                   }
+                                }      
+                             }
+                          }
 
             //if it is a write memory access
             else if (RW = 'W'){
@@ -176,50 +176,50 @@ int main() {
                     //terminate loop and move on to the next loop
                     break;
                     }
-                        //if the tag does not exist in the cache
-                        else if(j==NumberofCacheLines-1) {
-                            //increment number of write misses
-                            NCWM++;
-                            //place the tag in cache
-                            cache[tracker]=tag;
-                            //if valid bit is not set
+                 //if the tag does not exist in the cache
+                 else if(j==NumberofCacheLines-1) {
+                        //increment number of write misses
+                        NCWM++;
+                        //place the tag in cache
+                        cache[tracker]=tag;
+                        //if valid bit is not set
                             if (ValidBit[j] == 0){
                                 //increase the number of read accesses by the cache block size
                                 NRA=NRA+CacheBlockSize;
                                 //set the valid bit to 1
                                 ValidBit[j] = 1;
-                        //cache[tracker]=tag;
+                                //cache[tracker]=tag;
                                 }
-                                    //if valid bit is set
-                                    else if(ValidBit[j] == 1){
-                                        //and if dirty bit is not set
-                                        if(DirtyBit[j] == 0){
-                                            //increase the number of read accesses by the cache block size
-                                            NRA=NRA+CacheBlockSize;
-                                            }
-                                                //if the dirty bit is set
-                                                else if(DirtyBit[j] == 1){
-                                                    //increase the number of write accesses by cache block size
-                                                    NWA = NWA + CacheBlockSize;
-                                                    //increase the number of read accesses by cache block size
-                                                    NRA = NRA + CacheBlockSize;
-                                                    //set the dirty bit to 0
-                                                    DirtyBit[j] = 0;
-                                                    }
-                                                }
+                             //if valid bit is set
+                             else if(ValidBit[j] == 1){
+                                   //and if dirty bit is not set
+                                    if(DirtyBit[j] == 0){
+                                    //increase the number of read accesses by the cache block size
+                                     NRA=NRA+CacheBlockSize;
+                                     }
+                               //if the dirty bit is set
+                               else if(DirtyBit[j] == 1){
+                                     //increase the number of write accesses by cache block size
+                                     NWA = NWA + CacheBlockSize;
+                                     //increase the number of read accesses by cache block size
+                                     NRA = NRA + CacheBlockSize;
+                                     //set the dirty bit to 0
+                                     DirtyBit[j] = 0;
+                                      }
+                                }
                         }
                     //if the tracker is less than the number of cache lines
                     if(tracker<NumberofCacheLines-1){
-                        //move the tracker up the cache array
-                        tracker++;
-                        }
-                            else {
-                                //if the tracker reaches the top of the cache array reset tracker to 0 to fulfill FIFO
+                                                     //move the tracker up the cache array
+                                                     tracker++;
+                                                       }
+                     else {
+                            //if the tracker reaches the top of the cache array reset tracker to 0 to fulfill FIFO
                                 tracker=0;
                                 }
-                }
-            }
-        }
+                            }
+                        }
+                    }
     //}
     printf("bubble_sort_trace_060.trc, %d, %d, %d, %d, %d, %d, %d", mode_ID, NRA, NWA, NCRH, NCRM, NCWH, NCWM);
     }
