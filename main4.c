@@ -24,6 +24,35 @@ int main() {
     //The ID number of the cache configuration mode (1 … 8)
     int mode_ID;
 
+
+    int cache[256];
+    //Valid bit indicates if the cache block has been filled or not
+    //Total number of items in the valid bits array needed is the same as the Number of Cache lines for each mode
+    int ValidBit[256];
+    //Dirty bit indicates if the cache block has been modified or not
+    //Total number of items in the dirty bits array needed is the same as the Number of Cache lines for each mode
+    int DirtyBit[256];
+        //tracker is a variable used to see where the FIFO algorithm needs to replace an item
+    int tracker=0;
+        //Total number of read accesses to the external memory
+    int NRA = 0;
+    //Total number of write accesses to the external memory
+    int NWA = 0;
+    //Number of cache read hits
+    int NCRH = 0;
+    //Number of cache read misses
+    int NCRM = 0;
+    //Number of cache write hits
+    int NCWH = 0;
+    //Number of cache write misses
+    int NCWM = 0;
+    //tag is used to assess whether the address exists in cache or not
+    int tag;
+    //Cache Block Size changes to the power of 2 in each mode
+    int CacheBlockSize;
+    int NumberofCacheLines;
+   //set up if statements for Cache Block Size and Number of Cache Lines for all 8 modes
+
     //open the files
     pf1 = fopen("bubble_sort_trace_060.trc", "r" );
     pf2 = fopen("cross_correlation_trace_060.trc", "r");
@@ -36,24 +65,7 @@ int main() {
     }else{
         for(mode_ID = 1; mode_ID<9;mode_ID++){
             rewind(pf1);
-            //Total number of read accesses to the external memory
-            int NRA = 0;
-            //Total number of write accesses to the external memory
-            int NWA = 0;
-            //Number of cache read hits
-            int NCRH = 0;
-            //Number of cache read misses
-            int NCRM = 0;
-            //Number of cache write hits
-            int NCWH = 0;
-            //Number of cache write misses
-            int NCWM = 0;
-            //tag is used to assess whether the address exists in cache or not
-            int tag;
-            //Cache Block Size changes to the power of 2 in each mode
-            int CacheBlockSize;
-            int NumberofCacheLines;
-           //set up if statements for Cache Block Size and Number of Cache Lines for all 8 modes
+
             if (mode_ID==1){
                 CacheBlockSize = 1;
                 NumberofCacheLines = 256;
@@ -81,15 +93,7 @@ int main() {
             }
 
 
-    int cache[256];
-    //Valid bit indicates if the cache block has been filled or not
-    //Total number of items in the valid bits array needed is the same as the Number of Cache lines for each mode
-    int ValidBit[256];
-    //Dirty bit indicates if the cache block has been modified or not
-    //Total number of items in the dirty bits array needed is the same as the Number of Cache lines for each mode
-    int DirtyBit[256];
-        //tracker is a variable used to see where the FIFO algorithm needs to replace an item
-    int tracker=0;
+
 
 
             //fscanf is used to go through the file opened
@@ -101,38 +105,44 @@ int main() {
             if(RW == 'R'){
                 //run through the loop until all cache lines have been evaluated
                 for(int j=0; j<NumberofCacheLines; j++){
+
                         //if the tag is in the cache and valid bit has been set
                         if(cache[j] == tag&&ValidBit[j]==1){
+
                             //increment the number of read hits
                             NCRH++;
                             //increase number of read accesses by the cache block size
                             break;
                         }else if(j==NumberofCacheLines-1) {
+                                NRA = NRA+CacheBlockSize;
+
                                 //increment number of read misses
                                 NCRM++;
-                                NRA = NRA+CacheBlockSize;
                                 cache[tracker]=tag;
                                 //set the valid bit to 1
-                                ValidBit[tracker] = 1;
+
                                 //and if the dirty bit is not set
                                 if(DirtyBit[tracker] == 1){
                                     //increase number of write accesses by cache block size
                                     NWA = NWA + CacheBlockSize;
                                 }
-                                    DirtyBit[tracker]=0;
+                                ValidBit[tracker] = 1;
+                                DirtyBit[tracker]=0;
 
-                            tracker++;
+                                tracker++;
                             //if the tracker is less than the number of cache lines
                             if(tracker>NumberofCacheLines-1){
                                 //if it reaches the top of the array then reset to 0
                                 tracker=0;
                             }
+                            break;
                         }
                     }
                 }
                 else if (RW = 'W'){
                     //run through loop until all cache lines have been evaluated
                     for(int j=0; j<NumberofCacheLines; j++){
+
                         if (cache[j] == tag&&ValidBit[j]==1){
                             //if tag exists in cache then increment number of cache write hits by 1
                             NCWH++;
@@ -140,10 +150,11 @@ int main() {
                             //terminate loop and move on to the next loop
                             break;
                         }else if(j==NumberofCacheLines-1) {
+                            NRA = NRA+CacheBlockSize;
+
                             //increment number of write misses
                             NCWM++;
-                            NRA = NRA+CacheBlockSize;
-                            ValidBit[tracker] = 1;
+
                             //place the tag in cache
                             cache[tracker]=tag;
 
@@ -152,13 +163,14 @@ int main() {
                                 NWA = NWA + CacheBlockSize;
                             }
                             DirtyBit[tracker] = 1;
-
+                            ValidBit[tracker] = 1;
                             //move the tracker up the cache array
                             tracker++;
                             if(tracker>NumberofCacheLines-1){
                                 //if the tracker reaches the top of the cache array reset tracker to 0 to fulfill FIFO
                                 tracker=0;
                             }
+                            break;
                         }
                     }
                 }
