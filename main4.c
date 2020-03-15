@@ -10,6 +10,7 @@
 #include <stdlib.h>
 //add math library for log function
 #include <math.h>
+#include <string.h>
 
 //start main function
 int main() {
@@ -25,13 +26,13 @@ int main() {
     int mode_ID;
 
 
-    int cache[256];
+    int cache[256]={0};
     //Valid bit indicates if the cache block has been filled or not
     //Total number of items in the valid bits array needed is the same as the Number of Cache lines for each mode
-    int ValidBit[256];
+    int ValidBit[256]={0};
     //Dirty bit indicates if the cache block has been modified or not
     //Total number of items in the dirty bits array needed is the same as the Number of Cache lines for each mode
-    int DirtyBit[256];
+    int DirtyBit[256]={0};
         //tracker is a variable used to see where the FIFO algorithm needs to replace an item
     int tracker=0;
         //Total number of read accesses to the external memory
@@ -176,6 +177,22 @@ int main() {
                 }
             }
             printf("\nbubble_sort_trace_060.trc, %d, %d, %d, %d, %d, %d, %d", mode_ID, NRA, NWA, NCRH, NCRM, NCWH, NCWM);
+            memset (cache,0,sizeof(cache));
+            memset (ValidBit,0,sizeof(ValidBit));
+            memset (DirtyBit,0,sizeof(DirtyBit));
+            tracker=0;
+            //Total number of read accesses to the external memory
+            NRA = 0;
+            //Total number of write accesses to the external memory
+            NWA = 0;
+            //Number of cache read hits
+            NCRH = 0;
+            //Number of cache read misses
+            NCRM = 0;
+            //Number of cache write hits
+            NCWH = 0;
+            //Number of cache write misses
+            NCWM = 0;
         }
     }
 
