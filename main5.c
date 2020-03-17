@@ -52,9 +52,11 @@ int main() {
     int NumberofCacheLines;
    //set up if statements for Cache Block Size and Number of Cache Lines for all 8 modes
 
+   char fnames[2][64]={"kiran_rand.trc","cross_correlation_trace_060.trc"};
+
     //open the files
-    pf[0] = fopen("kiran_rand.trc", "r" );
-    pf[1] = fopen("cross_correlation_trace_060.trc", "r");
+    pf[0] = fopen(fnames[0], "r" );
+    pf[1] = fopen(fnames[1], "r" );
 
     //check if both files opens successfully
     if(pf[0] == NULL || pf[1] == NULL){
@@ -173,7 +175,7 @@ int main() {
                     }
                 }
             }
-            printf("\nbubble_sort_trace_060.trc, %d, %d, %d, %d, %d, %d, %d", mode_ID, NRA, NWA, NCRH, NCRM, NCWH, NCWM);
+            printf("\n%s, %d, %d, %d, %d, %d, %d, %d", fnames[i], mode_ID, NRA, NWA, NCRH, NCRM, NCWH, NCWM);
             memset (cache,0,sizeof(cache));
             memset (ValidBit,0,sizeof(ValidBit));
             memset (DirtyBit,0,sizeof(DirtyBit));
