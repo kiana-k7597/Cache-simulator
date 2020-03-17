@@ -16,14 +16,13 @@
 int main() {
     //declare a pointer of the file_pointer
     //pf means pointer of type file
-    FILE *pf1;
-    FILE *pf2;
+    FILE *pf[2];
 
     //declare variables used in the trace file
     char RW;
     int address;
     //The ID number of the cache configuration mode (1 … 8)
-    int mode_ID=4;
+    int mode_ID;
 
     int cache[256]={0};
     //Valid bit indicates if the cache block has been filled or not
@@ -54,17 +53,19 @@ int main() {
    //set up if statements for Cache Block Size and Number of Cache Lines for all 8 modes
 
     //open the files
-    pf1 = fopen("kiran_rand.trc", "r" );
-    pf2 = fopen("cross_correlation_trace_060.trc", "r");
+    pf[0] = fopen("kiran_rand.trc", "r" );
+    pf[1] = fopen("cross_correlation_trace_060.trc", "r");
 
     //check if both files opens successfully
-    if(pf1 == NULL || pf2 == NULL){
+    if(pf[0] == NULL || pf[1] == NULL){
     //if both files don't open display a message
         printf("unable to open the file\n");
     //if both files open execute the cache simulation
     }else{
+    for(int i=0;i<2;i++){
+
         for(mode_ID = 1; mode_ID<9;mode_ID++){
-            rewind(pf1);
+            rewind(pf[i]);
 
 
             if (mode_ID==1){
@@ -94,7 +95,7 @@ int main() {
             }
 
             //fscanf is used to go through the file opened
-            while(fscanf(pf1, "%c %x\n" , &RW, &address)==2){
+            while(fscanf(pf[i], "%c %x\n" , &RW, &address)==2){
                 //perform bit shifting operation on the address based on which mode it is in
                 tag = address>>(int) (log(CacheBlockSize)/log(2));
             //if it is a read memory access
@@ -189,6 +190,7 @@ int main() {
             NCWH = 0;
             //Number of cache write misses
             NCWM = 0;
+            }
         }
     }
 
